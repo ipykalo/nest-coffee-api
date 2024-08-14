@@ -17,7 +17,7 @@ export class CoffeeController {
   constructor(private coffeeService: CoffeeService) {}
 
   @Get()
-  getCoffees(): Promise<Coffee[]> {
+  getCoffees(): Promise<GetCoffeeDto[]> {
     return this.coffeeService.getAllCoffees();
   }
 
@@ -27,7 +27,7 @@ export class CoffeeController {
   }
 
   @Put()
-  createCoffee(@Body() dto: CreateCoffeeDto): Promise<Coffee> {
+  createCoffee(@Body() dto: CreateCoffeeDto): Promise<GetCoffeeDto> {
     return this.coffeeService.create(dto);
   }
 
@@ -35,12 +35,12 @@ export class CoffeeController {
   patchCoffee(
     @Param('id') id: string,
     @Body() dto: CreateCoffeeDto,
-  ): Promise<Coffee> {
+  ): Promise<GetCoffeeDto> {
     return this.coffeeService.update(id, dto);
   }
 
   @Delete('/:id')
-  deleteCoffee(@Param('id') id: string): Promise<Coffee> {
+  deleteCoffee(@Param('id') id: string): Promise<GetCoffeeDto> {
     return this.coffeeService.remove(id);
   }
 }

@@ -16,7 +16,7 @@ export class CoffeeService {
     private readonly flavorRepository: Repository<Flavor>,
   ) {}
 
-  getAllCoffees(): Promise<Coffee[]> {
+  getAllCoffees(): Promise<GetCoffeeDto[]> {
     return this.coffeeRepository.find({
       relations: { flavors: true },
     });
@@ -26,10 +26,10 @@ export class CoffeeService {
     return this.coffeeRepository.findOne({
       where: { id: +id },
       relations: { flavors: true },
-    }) as unknown as Promise<GetCoffeeDto>;
+    });
   }
 
-  async create(createCoffeeDto: CreateCoffeeDto): Promise<Coffee> {
+  async create(createCoffeeDto: CreateCoffeeDto): Promise<GetCoffeeDto> {
     const flavors = await Promise.all(
       createCoffeeDto.flavors.map((name) => this.preloadFlavorByName(name)),
     );
@@ -42,7 +42,10 @@ export class CoffeeService {
     return this.coffeeRepository.save(coffee);
   }
 
-  async update(id: string, updateCoffeeDto: UpdateCoffeeDto): Promise<Coffee> {
+  async update(
+    id: string,
+    updateCoffeeDto: UpdateCoffeeDto,
+  ): Promise<GetCoffeeDto> {
     let flavors = [];
 
     if (Array.isArray(updateCoffeeDto.flavors)) {
@@ -64,7 +67,7 @@ export class CoffeeService {
     return this.coffeeRepository.save(coffee);
   }
 
-  async remove(id: string): Promise<Coffee> {
+  async remove(id: string): Promise<GetCoffeeDto> {
     const coffee = await this.getCoffeeById(id);
 
     return this.coffeeRepository.remove(coffee);
