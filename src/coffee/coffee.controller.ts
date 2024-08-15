@@ -6,19 +6,23 @@ import {
   Param,
   Patch,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CoffeeService } from './coffee.service';
 import { GetCoffeeDto } from './dto/get-coffee.dto';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { Coffee } from './entities/coffee.entity';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
 
 @Controller('coffee')
 export class CoffeeController {
   constructor(private coffeeService: CoffeeService) {}
 
   @Get()
-  getCoffees(): Promise<GetCoffeeDto[]> {
-    return this.coffeeService.getAllCoffees();
+  getCoffees(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<GetCoffeeDto[]> {
+    return this.coffeeService.getAllCoffees(paginationQuery);
   }
 
   @Get('/:id')
