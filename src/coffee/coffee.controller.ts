@@ -5,7 +5,7 @@ import {
   Get,
   Param,
   Patch,
-  Put,
+  Post,
   Query,
 } from '@nestjs/common';
 import { CoffeeService } from './coffee.service';
@@ -30,7 +30,7 @@ export class CoffeeController {
     return this.coffeeService.getCoffeeById(id);
   }
 
-  @Put()
+  @Post()
   createCoffee(@Body() dto: CreateCoffeeDto): Promise<GetCoffeeDto> {
     return this.coffeeService.create(dto);
   }
@@ -46,5 +46,10 @@ export class CoffeeController {
   @Delete('/:id')
   deleteCoffee(@Param('id') id: string): Promise<GetCoffeeDto> {
     return this.coffeeService.remove(id);
+  }
+
+  @Post('/recommend/:id')
+  recommendCoffee(@Param('id') id: number): Promise<void> {
+    return this.coffeeService.recommendCoffee(id);
   }
 }
