@@ -33,11 +33,16 @@ export class CoffeeService {
     });
   }
 
-  getCoffeeById(id: string): Promise<Coffee> {
-    return this.coffeeRepository.findOne({
+  async getCoffeeById(id: string): Promise<Coffee> {
+    const coffee = await this.coffeeRepository.findOne({
       where: { id: +id },
       relations: { flavors: true },
     });
+
+    if (!coffee) {
+      throw new NotFoundException(`Coffee with id: ${id} not found.`);
+    }
+    return coffee;
   }
 
   async create(createCoffeeDto: CreateCoffeeDto): Promise<GetCoffeeDto> {
