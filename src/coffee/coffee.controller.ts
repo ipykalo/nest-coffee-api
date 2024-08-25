@@ -14,6 +14,8 @@ import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { Coffee } from './entities/coffee.entity';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto/pagination-query.dto';
 import { Public } from '../common/decorators/public.decorator';
+import { ParseIntPipe } from '../common/pipes/parse-int.pipe';
+import { Protocol } from 'src/common/decorators/protocol.decorator';
 
 @Controller('coffee')
 export class CoffeeController {
@@ -23,13 +25,15 @@ export class CoffeeController {
   @Get()
   getCoffees(
     @Query() paginationQuery: PaginationQueryDto,
+    @Protocol('https') protocol: string,
   ): Promise<GetCoffeeDto[]> {
+    console.log('protocol', protocol);
     return this.coffeeService.getAllCoffees(paginationQuery);
   }
 
   @Public()
   @Get('/:id')
-  async getCoffee(@Param('id') id: string): Promise<Coffee> {
+  async getCoffee(@Param('id', ParseIntPipe) id: string): Promise<Coffee> {
     return this.coffeeService.getCoffeeById(id);
   }
 
