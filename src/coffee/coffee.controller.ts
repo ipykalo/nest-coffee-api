@@ -16,11 +16,18 @@ import { PaginationQueryDto } from '../common/dto/pagination-query.dto/paginatio
 import { Public } from '../common/decorators/public.decorator';
 import { ParseIntPipe } from '../common/pipes/parse-int.pipe';
 import { Protocol } from 'src/common/decorators/protocol.decorator';
+import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('coffee')
 @Controller('coffee')
 export class CoffeeController {
   constructor(private coffeeService: CoffeeService) {}
 
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
   @Public()
   @Get()
   getCoffees(
@@ -47,7 +54,7 @@ export class CoffeeController {
   @Patch('/:id')
   patchCoffee(
     @Param('id') id: string,
-    @Body() dto: CreateCoffeeDto,
+    @Body() dto: UpdateCoffeeDto,
   ): Promise<GetCoffeeDto> {
     return this.coffeeService.update(id, dto);
   }

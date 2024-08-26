@@ -70,17 +70,20 @@ export class CoffeeService {
       );
     }
 
-    const coffee = await this.coffeeRepository.preload({
-      id: +id,
-      ...updateCoffeeDto,
-      flavors,
-    });
+    const oldCoffee = await this.getCoffeeById(id);
 
-    if (!coffee) {
+    if (!oldCoffee) {
       throw new NotFoundException(`Coffee #${id} not found`);
     }
 
-    return this.coffeeRepository.save(coffee);
+    const updatedCoffee = {
+      id: +id,
+      ...oldCoffee,
+      ...updateCoffeeDto,
+      ...(flavors.length ? { flavors } : null),
+    };
+
+    return this.coffeeRepository.save(updatedCoffee);
   }
 
   async remove(id: string): Promise<GetCoffeeDto> {
