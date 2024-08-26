@@ -7,7 +7,7 @@ import { Flavor } from './entities/flavor.entity';
 import { Event } from '../events/entities/event.entity';
 import { ConfigModule } from '@nestjs/config';
 import coffeeConfig from './config/coffee.config';
-import { LoggingMiddleware } from 'src/common/middlewares/logging/logging.middleware';
+import { LoggingMiddleware } from '../common/middlewares/logging/logging.middleware';
 
 @Module({
   controllers: [CoffeeController],
