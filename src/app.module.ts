@@ -35,7 +35,7 @@ import { CommonModule } from './common/common.module';
       load: [appConfig], // custom config
     }),
     CoffeeModule,
-    CoffeeRatingModule,
+    //CoffeeRatingModule,
     DatabaseModule,
     CommonModule,
   ],

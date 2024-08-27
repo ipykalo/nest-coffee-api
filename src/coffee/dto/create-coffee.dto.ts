@@ -18,5 +18,5 @@ export class CreateCoffeeDto {
     example: [],
   })
   @IsString({ each: true })
-  flavors: [];
+  flavors: string[];
 }
