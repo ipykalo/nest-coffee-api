@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CoffeeService } from './coffee.service';
 import { DataSource, Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Coffee } from './entities/coffee.entity';
-import { Flavor } from './entities/flavor.entity';
+import { Coffee } from './schemas/coffee.schema';
+import { Flavor } from './schemas/flavor.entity';
 import coffeeConfig from './config/coffee.config';
 import { NotFoundException } from '@nestjs/common';
 

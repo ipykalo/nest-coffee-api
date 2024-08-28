@@ -1,20 +1,23 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { CoffeeController } from './coffee.controller';
 import { CoffeeService } from './coffee.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Coffee } from './entities/coffee.entity';
-import { Flavor } from './entities/flavor.entity';
-import { Event } from '../events/entities/event.entity';
+import { Coffee, CoffeeSchema } from './schemas/coffee.schema';
 import { ConfigModule } from '@nestjs/config';
 import coffeeConfig from './config/coffee.config';
 import { LoggingMiddleware } from '../common/middlewares/logging/logging.middleware';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   controllers: [CoffeeController],
   providers: [CoffeeService],
   imports: [
     ConfigModule.forFeature(coffeeConfig),
-    TypeOrmModule.forFeature([Coffee, Flavor, Event]),
+    MongooseModule.forFeature([
+      {
+        name: Coffee.name,
+        schema: CoffeeSchema,
+      },
+    ]),
   ],
   exports: [CoffeeService],
 })

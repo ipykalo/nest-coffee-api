@@ -11,10 +11,9 @@ import {
 import { CoffeeService } from './coffee.service';
 import { GetCoffeeDto } from './dto/get-coffee.dto';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
-import { Coffee } from './entities/coffee.entity';
+import { Coffee } from './schemas/coffee.schema';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto/pagination-query.dto';
 import { Public } from '../common/decorators/public.decorator';
-import { ParseIntPipe } from '../common/pipes/parse-int.pipe';
 import { Protocol } from '../common/decorators/protocol.decorator';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -40,17 +39,15 @@ export class CoffeeController {
 
   @Public()
   @Get('/:id')
-  async getCoffee(@Param('id', ParseIntPipe) id: string): Promise<Coffee> {
+  async getCoffee(@Param('id') id: string): Promise<Coffee> {
     return this.coffeeService.getCoffeeById(id);
   }
 
-  @Public()
   @Post()
   createCoffee(@Body() dto: CreateCoffeeDto): Promise<GetCoffeeDto> {
     return this.coffeeService.create(dto);
   }
 
-  @Public()
   @Patch('/:id')
   patchCoffee(
     @Param('id') id: string,
@@ -62,10 +59,5 @@ export class CoffeeController {
   @Delete('/:id')
   deleteCoffee(@Param('id') id: string): Promise<GetCoffeeDto> {
     return this.coffeeService.remove(id);
-  }
-
-  @Post('/recommend/:id')
-  recommendCoffee(@Param('id') id: number): Promise<void> {
-    return this.coffeeService.recommendCoffee(id);
   }
 }

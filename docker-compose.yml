@@ -1,8 +1,8 @@
 services:
   db:
-    image: postgres
+    image: mongo # container image to be used
     restart: always
-    ports:
-      - '5432:5432'
-    environment:
-      POSTGRES_PASWORD: 12457800
+    ports: # expose ports in “host:container” format
+      - 27017:27017
+    environment: #env variables to pass into the container
+      MONGODB_DATABASE: nest-coffee
