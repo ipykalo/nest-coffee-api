@@ -60,4 +60,9 @@ export class CoffeeController {
   deleteCoffee(@Param('id') id: string): Promise<GetCoffeeDto> {
     return this.coffeeService.remove(id);
   }
+
+  @Post('recommend/:id')
+  recommendCoffee(@Param('id') id: string) {
+    return this.coffeeService.recommendCoffee(id);
+  }
 }

@@ -3,16 +3,19 @@ import { Coffee } from './schemas/coffee.schema';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { GetCoffeeDto } from './dto/get-coffee.dto';
-import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto/pagination-query.dto';
 import { ConfigType } from '@nestjs/config';
 import coffeeConfig from './config/coffee.config';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import mongoose, { Connection, Model } from 'mongoose';
+import { Event } from '../events/schemas/event.schema';
 
 @Injectable()
 export class CoffeeService {
   constructor(
     @InjectModel(Coffee.name) private readonly coffeeModel: Model<Coffee>,
+    @InjectModel(Event.name) private readonly eventModel: Model<Event>,
+    @InjectConnection() private readonly connection: Connection,
     @Inject(coffeeConfig.KEY)
     private readonly coffeesConfig: ConfigType<typeof coffeeConfig>,
   ) {
@@ -64,5 +67,37 @@ export class CoffeeService {
 
   remove(_id: string): Promise<GetCoffeeDto> {
     return this.coffeeModel.findOneAndDelete({ _id }).exec();
+  }
+
+  async recommendCoffee(coffeeId: string): Promise<void> {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+
+    try {
+      const coffee = await this.getCoffeeById(coffeeId);
+      coffee.recommendations++;
+
+      await this.coffeeModel
+        .findOneAndUpdate(
+          { _id: coffee._id },
+          { $set: coffee },
+          { new: true, session },
+        )
+        .exec();
+
+      const event = new this.eventModel({
+        name: 'recommend_coffee',
+        type: 'coffee',
+        payload: { coffeeId },
+      });
+      await event.save({ session });
+
+      await session.commitTransaction();
+    } catch (err) {
+      await session.abortTransaction();
+      throw err;
+    } finally {
+      session.endSession();
+    }
   }
 }

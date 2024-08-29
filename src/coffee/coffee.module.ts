@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import coffeeConfig from './config/coffee.config';
 import { LoggingMiddleware } from '../common/middlewares/logging/logging.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
+import { Event, EventSchema } from '../events/schemas/event.schema';
 
 @Module({
   controllers: [CoffeeController],
@@ -16,6 +17,10 @@ import { MongooseModule } from '@nestjs/mongoose';
       {
         name: Coffee.name,
         schema: CoffeeSchema,
+      },
+      {
+        name: Event.name,
+        schema: EventSchema,
       },
     ]),
   ],
