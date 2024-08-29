@@ -2,7 +2,7 @@ version: '2'
 services:
   mongodb:
     image: mongo:7
-    container_name: mongodb
+    container_name: mongo1
     ports:
       - '27017:27017'
     command: mongod --replSet rs0
