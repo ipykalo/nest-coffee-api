@@ -6,7 +6,7 @@ export class Event extends mongoose.Document {
   @Prop({ required: true })
   type: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, index: true })
   name: string;
 
   @Prop({
@@ -16,3 +16,4 @@ export class Event extends mongoose.Document {
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);
+EventSchema.index({ name: 1, type: -1 }); // Compound index referencing multiple properties
